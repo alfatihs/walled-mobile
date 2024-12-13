@@ -1,20 +1,29 @@
-import { View, StyleSheet, Pressable, Text } from 'react-native'
-import { Icon } from 'react-native-vector-icons/FontAwesome'
+import React, { useState } from 'react';
+import { StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { Feather } from '@expo/vector-icons'; // Pastikan menggunakan cara impor yang tepat
+
 export default function ThemeToggle() {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    const toggleTheme = () => {
+        setIsDarkMode(!isDarkMode);
+    };
+
     return (
-        <Pressable onPress={() => console.log('hai')}>
-            <Text>Button</Text>
-            {/* <Icon name="moon" size={24} color="black"></Icon> */}
-        </Pressable>
-    )
+        <TouchableOpacity style={styles.button} onPress={toggleTheme}>
+            {isDarkMode ? (
+                <Feather name="moon" size={24} color="black" />
+            ) : (
+                <Feather name="sun" size={24} color="orange" />
+            )}
+        </TouchableOpacity>
+    );
 }
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: 'black',
-        color: 'white',
-        borderRadius: 5,
-        padding: 10,
-    }
-})
-
+        // backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});

@@ -1,43 +1,62 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import sunIcon from '../assets/sun.png';
+import plusIcon from '../assets/plus.png';
+import sendIcon from '../assets/send.png';
+import { useState } from 'react';
+import { Entypo } from '@expo/vector-icons';
 
 export default function DashboardBody() {
-  return (
-    <ScrollView style={styles.scrollContent} contentContainerStyle={{paddingBottom: 20}}>
+  const [isBalanceVisible, setIsBalanceVisible] = useState(false); 
 
+  const toggleBalanceVisibility = () => {
+    setIsBalanceVisible(!isBalanceVisible);
+  };
+
+  return (
+    <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: 20 }}>
+      
       <View style={styles.greetingContainer}>
         <View style={styles.greetingRow}>
-          <Text style={styles.greetingText}>Good Morning, Chelsea</Text>
-
-          <Text style={styles.emojiIcon}>☀️</Text>
+          <View style={{flex: 1, rowGap: 20}}>
+            <Text style={styles.greetingText}>Good Morning, Chelsea</Text>
+            <Text style={styles.greetingSub}>Check all your incoming and outgoing transactions here</Text>
+          </View>
+          <Image source={sunIcon} style={styles.iconImage} />
         </View>
-        <Text style={styles.greetingSub}>Check all your incoming and outgoing transactions here</Text>
       </View>
 
-
-      <View style={styles.accountContainer}>
-        <View style={styles.accountBox}>
-          <Text style={styles.accountLabel}>Account No.100899</Text>
-          <Text style={styles.accountLabel}>Account No.100899</Text>
-        </View>
+      <View style={styles.accountBox}>
+        <Text style={styles.accountLabel}>Account No.</Text>
+        <Text style={styles.accountLabel}>100899</Text>
       </View>
 
       <View style={styles.balanceSection}>
         <View style={styles.balanceInfo}>
           <Text style={styles.balanceLabel}>Balance</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.balanceValue}>Rp 10.000.000</Text>
-
-            <Text style={[styles.emojiIcon, {marginLeft: 4}]}>👀</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {isBalanceVisible ? (
+              <Text style={styles.balanceValue}>Rp 10.000.000</Text>
+            ) : (
+              <Text style={styles.balanceValue}>Rp ********</Text>
+            )}
+ 
+            <TouchableOpacity onPress={toggleBalanceVisibility} style={{ marginLeft: 4 }}>
+              {isBalanceVisible ? (
+                <Entypo name="eye" size={15} color="black" right={5} marginTop ={5}/>
+              ) : (
+                <Entypo name="eye-with-line" size={15} color="black" right={5} marginTop ={5}/>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.actionButtons}>
 
           <View style={styles.actionButton}>
-            <Text style={styles.actionButtonText}>+</Text>
+            <Image source={plusIcon} style={styles.actionButtonIcon} />
           </View>
 
           <View style={styles.actionButton}>
-            <Text style={styles.actionButtonText}>➜</Text>
+            <Image source={sendIcon} style={styles.actionButtonIcon} />
           </View>
         </View>
       </View>
@@ -45,7 +64,6 @@ export default function DashboardBody() {
 
       <View style={styles.transactionContainer}>
         <Text style={styles.transactionHeader}>Transaction History</Text>
-
 
         <View style={styles.transactionItem}>
           <View style={styles.transactionLeft}>
@@ -103,7 +121,7 @@ export default function DashboardBody() {
 const styles = StyleSheet.create({
   scrollContent: {
     flex: 1,
-    backgroundColor: '#F5F5F5', 
+    backgroundColor: '#F5F5F5',
     paddingHorizontal: 16,
     paddingTop: 16
   },
@@ -111,39 +129,39 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   greetingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 4,
+    gap: 10,
   },
   greetingText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginRight: 8
+    marginBottom: 4
   },
   greetingSub: {
     fontSize: 14,
     color: '#555'
   },
+  iconImage: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+    marginLeft: 8
+  },
   emojiIcon: {
     fontSize: 20
   },
 
-  accountContainer: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 1
-  },
   accountBox: {
-    backgroundColor: '#0FB5B8',
+    backgroundColor: '#19918F',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16
   },
   accountLabel: {
     color: '#fff',
@@ -157,6 +175,7 @@ const styles = StyleSheet.create({
   },
 
   balanceSection: {
+    marginTop: 20,
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 10,
@@ -183,10 +202,11 @@ const styles = StyleSheet.create({
     marginRight: 8
   },
   actionButtons: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    gap: 10
   },
   actionButton: {
-    backgroundColor: '#0FB5B8',
+    backgroundColor: '#19918F',
     width: 40,
     height: 40,
     borderRadius: 8,
@@ -194,10 +214,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 10
   },
-  actionButtonText: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: 'bold'
+  actionButtonIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+    tintColor: '#fff'
   },
 
   transactionContainer: {
