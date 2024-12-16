@@ -2,12 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { Text, TextInput, View, StyleSheet, Image } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton';
 import LoginIcon from '../assets/icon.png';
-import { Link } from 'expo-router';
-import { z } from "zod";
+import { Link, useNavigation, router } from 'expo-router';
+import { set, z } from "zod";
 import { useState } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const LoginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -21,6 +20,7 @@ export default function Login() {
 
     })
     const [errorsMsg, setErrors] = useState({})
+    const [serverError, setServerError] = useState("")
 
     const handleInputChange = (key, value) => {
         setForm({ ...form, [key]: value })
@@ -37,18 +37,19 @@ export default function Login() {
         try {
             LoginSchema.parse(form);
             const res = await axios.post(`${apiUrl}/auth/login`, form);
-            // console.log(res.data.data.token, 'ini response');
-            if (res.status === 200) {
+            if (res) {
                 try {
                     await AsyncStorage.setItem('token', res.data.data.token);
                     console.log('token berhasil disimpan');
                     alert('Login Berhasil!');
+                    router.replace('/(home)');
+
                 } catch (err) {
                     console.log(err, 'error menyimpan token')
                 }
             }
         } catch (err) {
-            console.log(err, 'ini error');
+            setServerError(err.response.data.error);
             const validation = err.errors;
             const errors = {}
             validation.map((item) => {
@@ -67,6 +68,7 @@ export default function Login() {
             <TextInput style={{ ...styles.input }} placeholder='Password' secureTextEntry={true} onChangeText={(text) => handleInputChange('password', text)} />
             {errorsMsg.password && <Text style={styles.errorMessage}>{errorsMsg.password}</Text>}
             <PrimaryButton text='Login' handlePress={handleSubmit}></PrimaryButton>
+            <Text style={styles.serverError}>{serverError}</Text>
             <View style={{ flexDirection: 'row', width: '100%', gap: 4, marginTop: 10 }}>
                 <Text style={styles.loginDesc}>Don’t have account? </Text>
                 <Link href='/register'><Text style={{ fontWeight: 'bold' }}>Register Here</Text></Link>
@@ -122,5 +124,11 @@ const styles = StyleSheet.create({
         color: 'red',
         marginTop: -10,
         marginBottom: 10,
+    },
+    serverError: {
+        width: '100%',
+        marginTop: 10,
+        color: 'red'
     }
+
 });
