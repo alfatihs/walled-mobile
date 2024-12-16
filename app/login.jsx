@@ -5,11 +5,16 @@ import LoginIcon from '../assets/icon.png';
 import { Link } from 'expo-router';
 import { z } from "zod";
 import { useState } from 'react';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(5, { message: 'Password must be at least 5 characters long' }),
 })
+
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 export default function Login() {
     const [form, setForm] = useState({
@@ -24,15 +29,26 @@ export default function Login() {
             setErrors((prev) => ({ ...prev, [key]: "" }));
         } catch (err) {
             setErrors((prev) => ({ ...prev, [key]: err.errors[0].message }))
-        } finally {
-            console.log(errorsMsg, "errors message")
         }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        console.log('submit!', form);
         try {
             LoginSchema.parse(form);
+            const res = await axios.post(`${apiUrl}/auth/login`, form);
+            // console.log(res.data.data.token, 'ini response');
+            if (res.status === 200) {
+                try {
+                    await AsyncStorage.setItem('token', res.data.data.token);
+                    console.log('token berhasil disimpan');
+                    alert('Login Berhasil!');
+                } catch (err) {
+                    console.log(err, 'error menyimpan token')
+                }
+            }
         } catch (err) {
+            console.log(err, 'ini error');
             const validation = err.errors;
             const errors = {}
             validation.map((item) => {
@@ -46,9 +62,9 @@ export default function Login() {
         <View style={[styles.container, { flexDirection: 'column' }]}>
             <StatusBar style="dark" />
             <Image source={LoginIcon} style={styles.iconImage} />
-            <TextInput style={styles.input} placeholder='Email' keyboardType='email-address' onChangeText={(text) => handleInputChange('email', text)} />
+            <TextInput style={{ ...styles.input }} placeholder='Email' keyboardType='email-address' onChangeText={(text) => handleInputChange('email', text)} />
             {errorsMsg.email && <Text style={styles.errorMessage}>{errorsMsg.email}</Text>}
-            <TextInput style={styles.input} placeholder='Password' secureTextEntry={true} onChangeText={(text) => handleInputChange('password', text)} />
+            <TextInput style={{ ...styles.input }} placeholder='Password' secureTextEntry={true} onChangeText={(text) => handleInputChange('password', text)} />
             {errorsMsg.password && <Text style={styles.errorMessage}>{errorsMsg.password}</Text>}
             <PrimaryButton text='Login' handlePress={handleSubmit}></PrimaryButton>
             <View style={{ flexDirection: 'row', width: '100%', gap: 4, marginTop: 10 }}>

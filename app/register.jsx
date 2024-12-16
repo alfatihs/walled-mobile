@@ -17,7 +17,6 @@ export default function Register() {
             <TextInput style={styles.input} placeholder='Fullname' keyboardType='email-address' />
             <TextInput style={styles.input} placeholder='Email' keyboardType='email-address' />
             <TextInput style={styles.input} placeholder='Password' secureTextEntry={true} />
-            <TextInput style={styles.input} placeholder='Avatar Url' keyboardType='email-address' />
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', columnGap: 10 }}>
                 <Checkbox value={isChecked} onValueChange={setChecked} />
                 <Text >I have read and agree to the <Link href='/tnc'><Text style={{ color: '#19918f' }}>Terms and Conditions </Text></Link><Text style={{ color: 'red' }}>*</Text></Text>
