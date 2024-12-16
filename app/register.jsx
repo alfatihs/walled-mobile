@@ -1,21 +1,51 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, TextInput, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, TextInput, View, StyleSheet, TouchableOpacity, Image, Modal, Pressable } from 'react-native';
 import LoginIcon from '../assets/icon.png';
 import { Link } from 'expo-router';
-
+import Checkbox from 'expo-checkbox';
+import PrimaryButton from '../components/PrimaryButton';
+import { useState } from 'react';
 
 export default function Register() {
+    const [isChecked, setChecked] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+
     return (
         <View style={[styles.container, { flexDirection: 'column' }]}>
             <StatusBar style="dark" />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Hello World!</Text>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}>
+                            <Text style={styles.textStyle}>Hide Modal</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
             <Image source={LoginIcon} style={styles.iconImage} />
             <TextInput style={styles.input} placeholder='Fullname' keyboardType='email-address' />
             <TextInput style={styles.input} placeholder='Email' keyboardType='email-address' />
             <TextInput style={styles.input} placeholder='Password' secureTextEntry={true} />
             <TextInput style={styles.input} placeholder='Avatar Url' keyboardType='email-address' />
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.loginText}>Register</Text>
-            </TouchableOpacity>
+
+
+
+            <PrimaryButton text='Register' />
+
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', columnGap: 10 }}>
+                <Checkbox value={isChecked} onValueChange={setChecked} />
+                <Text >I have read and agree to the <Text onPress={() => setModalVisible(true)} style={{ color: '#19918f' }}>Terms and Conditions </Text><Text style={{ color: 'red' }}>*</Text></Text>
+            </View>
 
             <View style={{ flexDirection: 'row', width: '100%', gap: 4, marginTop: 10 }}>
                 <Text style={styles.loginDesc}>have account? </Text>
