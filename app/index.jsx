@@ -4,8 +4,8 @@ import TopUp from './(home)/topup';
 
 export default function App() {
   return (
-    // <TopUp></TopUp>
-    <Login />
+    <TopUp></TopUp>
+    // <Login />
   );
 }
 
