@@ -5,26 +5,36 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function TabLayout() {
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <Tabs screenOptions={{ tabBarActiveTintColor: 'blue', tabBarInactiveTintColor: 'gray', tabBarShowLabel: false, tabBarStyle: { backgroundColor: 'white' } }}>
+            <Tabs
+                screenOptions={{ tabBarActiveTintColor: 'green', tabBarInactiveTintColor: 'gray' }}
+            // option={{ tabBarActiveTintColor: '#012001', tabBarBarInactiveTintColor: 'gray' }}
+            >
                 <Tabs.Screen
                     name="index"
                     // screenOptions={{}} 
                     options={{
                         headerShown: false,
-                        tabBarIcon: (() => <Ionicons name='home' color='red' size={32} />),
+                        tabBarIcon: (({ color }) => <Ionicons name='home' size={20} color={color} />),
+                        tabBarLabel: 'Home'
 
                     }}
                 />
                 <Tabs.Screen
                     name="topup"
                     options={{
-                        headerShown: false
+                        headerShown: true,
+                        tabBarIcon: (({ color }) => <Ionicons name='cash' size={20} color={color} />),
+                        tabBarLabel: 'Top Up',
+                        headerTitle: 'Top Up'
                     }}
                 />
                 <Tabs.Screen
                     name="transfer"
                     options={{
-                        headerShown: false
+                        headerShown: true,
+                        tabBarIcon: (({ color }) => <Ionicons name='send' size={20} color={color} />),
+                        tabBarLabel: 'Transfer',
+                        headerTitle: 'Transfer'
                     }}
 
                 />

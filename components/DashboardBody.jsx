@@ -4,21 +4,53 @@ import plusIcon from '../assets/plus.png';
 import sendIcon from '../assets/send.png';
 import { useState } from 'react';
 import { Entypo } from '@expo/vector-icons';
+import { faSign } from '@fortawesome/free-solid-svg-icons';
 
-export default function DashboardBody() {
-  const [isBalanceVisible, setIsBalanceVisible] = useState(false); 
+const TransactionHistoryItem = ({ transactionItemProps }) => {
+  console.log('HISTORY');
+  const sign = transactionItemProps.type === 'DEBIT' ? '+' : '-';
+  return (
+    <View style={styles.transactionItem}>
+      <View style={styles.transactionLeft}>
+        <View style={styles.avatarPlaceholder}></View>
+        <View style={styles.transactionTextBlock}>
+          <Text style={styles.transactionName}>{transactionItemProps.id}</Text>
+          <Text style={styles.transactionType}>{transactionItemProps.description}</Text>
+          <Text style={styles.transactionDate}>{transactionItemProps.datetime}</Text>
+        </View>
+      </View>
+      <Text style={transactionItemProps.type === 'DEBIT' ? styles.transactionAmountPlus : styles.transactionAmountMinus}>{transactionItemProps.sign} {transactionItemProps.amount}</Text>
+    </View>
+  )
+}
 
+const TransactionSection = ({ transactions }) => {
+  if (transactions.length > 0) {
+    console.log('lebih dari 0!')
+    return transactions.map((transactionItem) => {
+      console.log('transactionItem', transactionItem)
+      return (
+        <View>
+          <TransactionHistoryItem transactionItemProps={transactionItem} />
+        </View>
+      )
+
+    })
+  }
+}
+
+export default function DashboardBody({ balance, noaccount, name, transactions }) {
+  console.log('woe', transactions)
+  const [isBalanceVisible, setIsBalanceVisible] = useState(false);
   const toggleBalanceVisibility = () => {
     setIsBalanceVisible(!isBalanceVisible);
   };
-
   return (
     <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: 20 }}>
-      
       <View style={styles.greetingContainer}>
         <View style={styles.greetingRow}>
-          <View style={{flex: 1, rowGap: 20}}>
-            <Text style={styles.greetingText}>Good Morning, Chelsea</Text>
+          <View style={{ flex: 1, rowGap: 20 }}>
+            <Text style={styles.greetingText}>{`Good Morning, ${name}`}</Text>
             <Text style={styles.greetingSub}>Check all your incoming and outgoing transactions here</Text>
           </View>
           <Image source={sunIcon} style={styles.iconImage} />
@@ -27,7 +59,7 @@ export default function DashboardBody() {
 
       <View style={styles.accountBox}>
         <Text style={styles.accountLabel}>Account No.</Text>
-        <Text style={styles.accountLabel}>100899</Text>
+        <Text style={styles.accountLabel}>{noaccount}</Text>
       </View>
 
       <View style={styles.balanceSection}>
@@ -35,16 +67,16 @@ export default function DashboardBody() {
           <Text style={styles.balanceLabel}>Balance</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {isBalanceVisible ? (
-              <Text style={styles.balanceValue}>Rp 10.000.000</Text>
+              <Text style={styles.balanceValue}>{`Rp ${balance}`}</Text>
             ) : (
               <Text style={styles.balanceValue}>Rp ********</Text>
             )}
- 
+
             <TouchableOpacity onPress={toggleBalanceVisibility} style={{ marginLeft: 4 }}>
               {isBalanceVisible ? (
-                <Entypo name="eye" size={15} color="black" right={5} marginTop ={5}/>
+                <Entypo name="eye" size={15} color="black" right={5} marginTop={5} />
               ) : (
-                <Entypo name="eye-with-line" size={15} color="black" right={5} marginTop ={5}/>
+                <Entypo name="eye-with-line" size={15} color="black" right={5} marginTop={5} />
               )}
             </TouchableOpacity>
           </View>
@@ -64,59 +96,13 @@ export default function DashboardBody() {
 
       <View style={styles.transactionContainer}>
         <Text style={styles.transactionHeader}>Transaction History</Text>
-
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <View style={styles.avatarPlaceholder}></View>
-            <View style={styles.transactionTextBlock}>
-              <Text style={styles.transactionName}>Adityo Gizwanda</Text>
-              <Text style={styles.transactionType}>Transfer</Text>
-              <Text style={styles.transactionDate}>08 December 2024</Text>
-            </View>
-          </View>
-          <Text style={styles.transactionAmountMinus}>- 75.000,00</Text>
-        </View>
-
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <View style={styles.avatarPlaceholder}></View>
-            <View style={styles.transactionTextBlock}>
-              <Text style={styles.transactionName}>Adityo Gizwanda</Text>
-              <Text style={styles.transactionType}>Topup</Text>
-              <Text style={styles.transactionDate}>08 December 2024</Text>
-            </View>
-          </View>
-          <Text style={styles.transactionAmountPlus}>+ 75.000,00</Text>
-        </View>
-
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <View style={styles.avatarPlaceholder}></View>
-            <View style={styles.transactionTextBlock}>
-              <Text style={styles.transactionName}>Adityo Gizwanda</Text>
-              <Text style={styles.transactionType}>Transfer</Text>
-              <Text style={styles.transactionDate}>08 December 2024</Text>
-            </View>
-          </View>
-          <Text style={styles.transactionAmountMinus}>- 75.000,00</Text>
-        </View>
-
-        <View style={styles.transactionItem}>
-          <View style={styles.transactionLeft}>
-            <View style={styles.avatarPlaceholder}></View>
-            <View style={styles.transactionTextBlock}>
-              <Text style={styles.transactionName}>Adityo Gizwanda</Text>
-              <Text style={styles.transactionType}>Transfer</Text>
-              <Text style={styles.transactionDate}>08 December 2024</Text>
-            </View>
-          </View>
-          <Text style={styles.transactionAmountMinus}>- 75.000,00</Text>
-        </View>
-
+        <TransactionSection transactions={transactions}></TransactionSection>
       </View>
     </ScrollView>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   scrollContent: {
@@ -129,7 +115,7 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   greetingRow: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 4,

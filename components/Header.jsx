@@ -3,13 +3,13 @@ import { Text } from "react-native";
 import { StyleSheet } from "react-native";
 import ProfilePhoto from "./ProfilePhoto";
 import ThemeToggle from "./ThemeToggle";
-export default function Header() {
+export default function Header({ name, imgurl }) {
     return (
         <View style={styles.Header}>
             <View style={{ flexDirection: 'row', columnGap: 10, alignItems: 'center' }}>
-                <ProfilePhoto></ProfilePhoto>
+                <ProfilePhoto imgurl={imgurl}></ProfilePhoto>
                 <View>
-                    <Text style={{ fontWeight: 'bold' }}>Chelsea Immanuela</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{name}</Text>
                     <Text>Personal Account</Text>
                 </View>
             </View>

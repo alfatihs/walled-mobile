@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native';
 import Login from './login';
+import TopUp from './(home)/topup';
 
 export default function App() {
   return (
+    // <TopUp></TopUp>
     <Login />
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
